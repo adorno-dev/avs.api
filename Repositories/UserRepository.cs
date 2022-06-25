@@ -28,9 +28,14 @@ namespace AVS.API.Repositories
 
         #region +Public Methods
 
-        public List<User>? GetAll() => users
+        // public List<User>? GetAll() => users
+        //     .Find(_ => true)
+        //     .Project(s => new User(s.Username, s.Email, null) { Id = s.Id, Creation = null })
+        //     .ToList();
+
+        public List<MongoDB.Bson.BsonDocument>? GetAll() => users
             .Find(_ => true)
-            .Project(s => new User(s.Username, s.Email, null) { Id = s.Id, Creation = null })
+            .Project(s => new MongoDB.Bson.BsonDocument { {"Id", s.Id}, {"Username", s.Username}})
             .ToList();
 
         public User? Get(string email) => users.Find(x => x.Email == email).FirstOrDefault();
