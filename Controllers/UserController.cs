@@ -1,4 +1,6 @@
 using AVS.API.Repositories;
+using AVS.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AVS.API.Controllers
@@ -9,20 +11,40 @@ namespace AVS.API.Controllers
         public string? Username { get; set; }
     }
 
+    [Authorize]
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly TokenService tokenService;
+
         private readonly UserRepository userRepository;
 
-        public UserController(UserRepository userRepository)
+        public UserController(UserRepository userRepository, TokenService tokenService)
         {
             this.userRepository = userRepository;
+            this.tokenService = tokenService;
         }
 
         [HttpGet("api/users")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = userRepository.GetAll()?.Select(s => 
+                new UserOutput { 
+                    Id = s["Id"].AsString,
+                    Username = s["Username"].AsString 
+                }).ToList();
+
+            await Task.CompletedTask;
+
+            return Ok(users);
+        }
+
+        [HttpGet("api/contacts")]
+        public async Task<IActionResult> GetContacts()
+        {
+            var ownerId = tokenService.GetUserIdFromRequest(HttpContext);
+
+            var users = userRepository.GetContacts(ownerId)?.Select(s => 
                 new UserOutput { 
                     Id = s["Id"].AsString,
                     Username = s["Username"].AsString 

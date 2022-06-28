@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using AVS.API.Models;
 using AVS.API.Settings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AVS.API.Services
@@ -18,7 +19,7 @@ namespace AVS.API.Services
             {
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(TokenSettings.GetSecret()),
                 SecurityAlgorithms.HmacSha256Signature),
-                Expires = DateTime.UtcNow.AddMinutes(10),
+                Expires = DateTime.UtcNow.AddMinutes(120),
                 Subject = claimsIdentity
             };
 
@@ -70,6 +71,15 @@ namespace AVS.API.Services
                 throw new SecurityTokenException("Invalid token.");
             
             return claimsPrincipal;
+        }
+
+        public string GetUserIdFromRequest(HttpContext context)
+        {
+            var token = context.Request.Headers.Authorization.First().Split(" ")[1];
+
+            var claims = GetClaimsPrincipalFromExpiredToken(token);
+
+            return claims.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         #endregion
