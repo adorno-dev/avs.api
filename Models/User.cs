@@ -24,6 +24,8 @@ namespace AVS.API.Models
         public string Email { get; set; }
         public string? Password { get; set; }
 
+        public IEnumerable<Chat>? Chats { get; set; }
+
         public void ClearPassword() => Password = null;
 
         public bool VerifyPassword(string password) => BCrypt.Net.BCrypt.EnhancedVerify(password, Password);
