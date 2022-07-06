@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using avs.api.Contracts.Authentication.Responses;
 using AVS.API.Contracts.Authentication.Requests;
 using AVS.API.Contracts.Authentication.Responses;
 using AVS.API.Models;
@@ -39,6 +40,8 @@ namespace AVS.API.Controllers
             userRepository.Get(request.Email, out User? user);
 
             if (user is not null) return BadRequest(SignInResponse.EmailAlreadyExists());
+
+            if (!request.Password.Equals(request.ConfirmPassword)) return BadRequest(SignUpResponse.MismatchOnPasswords());
 
             user = new User(request.Username, request.Email, request.Password);
 
