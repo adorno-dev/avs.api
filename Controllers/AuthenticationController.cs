@@ -58,10 +58,10 @@ namespace AVS.API.Controllers
             userRepository.Get(request.Email, out User? user);
 
             if (user == null) 
-                return NotFound(SignInResponse.NotAuthorized());
+                return Unauthorized(SignInResponse.NotAuthorized());
 
             if (!user.VerifyPassword(request.Password)) 
-                return BadRequest(SignInResponse.NotAuthorized());
+                return Unauthorized(SignInResponse.NotAuthorized());
             
             tokenService.GenerateToken(user, out string token);
             tokenService.GenerateRefreshToken(out string refreshToken);
