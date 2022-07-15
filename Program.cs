@@ -13,7 +13,9 @@ builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("Toke
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserRefreshTokenRepository>();
+builder.Services.AddScoped<ChatRepository>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<ChatService>();
 
 builder.Services
     .AddCors(o => o.AddPolicy("CorsPolicy", x => { x
