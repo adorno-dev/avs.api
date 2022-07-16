@@ -16,11 +16,11 @@ namespace AVS.API.Services
 
         public async Task<Chat> GetChatAsync(string id) => await repository.GetChatAsync(id);
 
-        public string GetChatId(string[] users) => repository.GetChatByUsers(users);
+        public string GetChatId(string[] users) => repository.GetChatByUsers(users.OrderBy(u => u).ToArray());
 
         public string CreateChat(string ownerId, string[] users, ChatMessage? message = null)
         {
-            var chat = new Chat(ownerId, users);
+            var chat = new Chat(ownerId, users.OrderBy(u => u).ToArray());
 
             repository.CreateChat(chat, message);
 

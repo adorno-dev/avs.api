@@ -109,6 +109,7 @@ namespace AVS.API.Repositories
         public List<MongoDB.Bson.BsonDocument>? GetContacts(string id) => users
             .Find(w => w.Id != id)
             .Project(s => new MongoDB.Bson.BsonDocument { {"Id", s.Id}, {"Username", s.Username}})
+            .SortBy(s => s.Username)
             .ToList();
 
         public User? Get(string email) => users.Find(x => x.Email == email).FirstOrDefault();

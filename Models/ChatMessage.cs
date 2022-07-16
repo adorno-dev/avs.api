@@ -13,15 +13,15 @@ namespace AVS.API.Models
             this.Body = body;
         }
 
-        [BsonElement("timestamp")]
-        [JsonPropertyName("timestamp")]
-        public DateTime TimeStamp { get; set; }
-
         [BsonId]
         [BsonElement("id")]
         [JsonPropertyName("id")]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+
+        [BsonElement("timestamp")]
+        [JsonPropertyName("timestamp")]
+        public DateTime TimeStamp { get; set; }
 
         [BsonElement("sender_id")]
         [JsonPropertyName("sender_id")]
