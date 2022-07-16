@@ -1,9 +1,11 @@
+using System.Reflection;
 using System.Text.Json.Serialization;
 using AVS.API.Repositories;
 using AVS.API.Services;
 using AVS.API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +47,25 @@ builder.Services
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "AVS.API",
+        Description = "Avatar Virtual Style API",
+        TermsOfService = new Uri("https://localhost:5000/terms"),
+        Contact = new OpenApiContact {
+            Name = "Example Contact",
+            Url = new Uri("https://localhost:5000/contact")
+        },
+        License = new OpenApiLicense {
+            Name = "Example License",
+            Url = new Uri("https://localhost:5000/license")
+        }
+    });
+
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+});
 
 var app = builder.Build();
 

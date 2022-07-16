@@ -25,6 +25,10 @@ namespace AVS.API.Controllers
             this.tokenService = tokenService;
         }
 
+        /// <summary>
+        /// Get all users (debug)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("api/users")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -39,6 +43,10 @@ namespace AVS.API.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// Get all contacts (debug / from your id)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("api/contacts")]
         public async Task<IActionResult> GetContacts()
         {

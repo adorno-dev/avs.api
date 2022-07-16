@@ -19,12 +19,26 @@ namespace AVS.API.Controllers
             this.chatService = chatService;
         }
 
+        /// <summary>
+        /// Get all chats (debug)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("api/chats")]
         public async Task<IActionResult> GetChatsAsync() => Ok(await chatService.GetChatsAsync());
 
+        /// <summary>
+        /// Get an especific chat
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("api/chats/{id}")]
         public async Task<IActionResult> GetChatAsync(string id) => Ok(await chatService.GetChatAsync(id));
 
+        /// <summary>
+        /// Gets a chat from your contact
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("api/chats/contact/{id}")]
         public async Task<IActionResult>GetChatByContactAsync(string id)
         {
@@ -33,6 +47,11 @@ namespace AVS.API.Controllers
             return Ok(await chatService.GetChatAsync(chatId));
         }
 
+        /// <summary>
+        /// Send message to an especific contact
+        /// </summary>
+        /// <param name="messageRequest"></param>
+        /// <returns>Returns generated chat ID</returns>
         [HttpPost("api/message")]
         public async Task<IActionResult> MessageAsync([FromBody] MessageRequest messageRequest)
         {

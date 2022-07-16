@@ -34,6 +34,11 @@ namespace AVS.API.Controllers
     
         #region +Endpoints
 
+        /// <summary>
+        /// Sign up endpoint
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("api/sign-up")]
         public async Task<IActionResult> SignUp([FromBody] SignUpRequest request)
         {
@@ -52,7 +57,24 @@ namespace AVS.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Sign in endpoint
+        /// </summary>
+        /// <remarks>
+        /// <i><b>SignInRequest</b></i>
+        /// 
+        ///     POST /sign-in
+        ///     {
+        ///         "email": "email@provider.com",
+        ///         "password": "yourpassword"    
+        ///     }
+        /// 
+        /// </remarks>
+        /// <param name="request"></param>
+        /// <response  code="200">Returns access token and refresh token.</response >
+        /// <response  code="401">Returns unauthorized response.</response >
         [HttpPost("api/sign-in")]
+        [Produces("application/json")]
         public async Task<IActionResult> SignIn([FromBody] SignInRequest request)
         {
             userRepository.Get(request.Email, out User? user);
@@ -73,6 +95,11 @@ namespace AVS.API.Controllers
             return Ok(SignInResponse.Ok(token, refreshToken));
         }
 
+        /// <summary>
+        /// Refresh token endpoint
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Returns new access token and refresh token.</returns>
         [HttpPost("api/refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
