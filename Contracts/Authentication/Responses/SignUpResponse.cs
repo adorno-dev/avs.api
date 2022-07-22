@@ -1,4 +1,4 @@
-namespace avs.api.Contracts.Authentication.Responses
+namespace AVS.API.Contracts.Authentication.Responses
 {
     public class SignUpResponse
     {

@@ -1,5 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using AVS.API.Clients;
+using AVS.API.Hubs;
 using AVS.API.Repositories;
 using AVS.API.Services;
 using AVS.API.Settings;
@@ -18,6 +20,9 @@ builder.Services.AddScoped<UserRefreshTokenRepository>();
 builder.Services.AddScoped<ChatRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ChatService>();
+
+builder.Services.AddScoped<ChatClient>();
+builder.Services.AddSignalR();
 
 builder.Services
     .AddCors(o => o.AddPolicy("CorsPolicy", x => { x
@@ -84,6 +89,14 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chatHub");
+
+
+
 
 app.Run();

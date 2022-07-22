@@ -30,5 +30,10 @@ namespace AVS.API.Models
         [BsonElement("body")]
         [JsonPropertyName("body")]
         public string Body { get; set; }
+
+        public override string ToString()
+        {
+            return $"[{TimeStamp}]:({Id}): {Body}";
+        }
     }
 }

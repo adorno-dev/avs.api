@@ -1,8 +1,11 @@
+using AVS.API.Clients;
 using AVS.API.Contracts.Chat.Requests;
+using AVS.API.Hubs;
 using AVS.API.Models;
 using AVS.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AVS.API.Controllers
 {
@@ -10,13 +13,16 @@ namespace AVS.API.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-        private TokenService tokenService;
-        private ChatService chatService;
+        private readonly TokenService tokenService;
+        private readonly ChatService chatService;
 
-        public ChatController(TokenService tokenService, ChatService chatService)
+        private readonly IHubContext<ChatHub, IChatClient> chatHub;
+
+        public ChatController(TokenService tokenService, ChatService chatService, IHubContext<ChatHub, IChatClient> chatHub)
         {
             this.tokenService = tokenService;
             this.chatService = chatService;
+            this.chatHub = chatHub;
         }
 
         /// <summary>
@@ -66,6 +72,8 @@ namespace AVS.API.Controllers
                 chatId = chatService.CreateChat(senderId, users, new ChatMessage(senderId, messageRequest.Body));
             else
                 chatService.CreateChatMessage(chatId, message);
+
+            await chatHub.Clients.All.ReceivedMessage(message);
 
             await Task.CompletedTask;
 

@@ -1,8 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using avs.api.Contracts.Authentication.Responses;
-using AVS.API.Contracts.Authentication.Requests;
 using AVS.API.Contracts.Authentication.Responses;
+using AVS.API.Contracts.Authentication.Requests;
 using AVS.API.Models;
 using AVS.API.Repositories;
 using AVS.API.Services;
