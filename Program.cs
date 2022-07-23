@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
-using AVS.API.Clients;
 using AVS.API.Hubs;
 using AVS.API.Repositories;
 using AVS.API.Services;
@@ -21,7 +20,6 @@ builder.Services.AddScoped<ChatRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ChatService>();
 
-builder.Services.AddScoped<ChatClient>();
 builder.Services.AddSignalR();
 
 builder.Services
@@ -48,6 +46,15 @@ builder.Services
             ValidateIssuerSigningKey = true,
             ValidateIssuer = false,
             ValidateAudience = false }; 
+        if (x.Events != null)
+            x.Events.OnMessageReceived = context => {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chatHub"))) {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            };
     });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -90,13 +97,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseDefaultFiles();
+
 app.UseStaticFiles();
 
 app.MapControllers();
 
 app.MapHub<ChatHub>("/chatHub");
-
-
-
 
 app.Run();
