@@ -76,7 +76,7 @@ namespace AVS.API.Controllers
             else
                 chatService.CreateChatMessage(chatId, message);
 
-            await chatHub.Clients.User(toId).ReceivedMessage(message);
+            await chatHub.Clients.All.ReceivedMessage(message);
 
             await Task.CompletedTask;
 
