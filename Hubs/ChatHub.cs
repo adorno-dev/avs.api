@@ -25,8 +25,6 @@ namespace AVS.API.Hubs
         {
             var UserId = Context.UserIdentifier?.ToString();
 
-            // Console.WriteLine(context);
-
             if (UserId != null)
                 connections.Add(UserId, Context.ConnectionId);
 
@@ -35,12 +33,10 @@ namespace AVS.API.Hubs
 
         public override Task OnDisconnectedAsync(Exception? exception)
         {
-            // var context = Context.GetHttpContext();
+            var UserId = Context.UserIdentifier?.ToString();
 
-            // if (context != null)
-                // connections.Remove(tokenService.GetUserIdFromRequest(context), Context.ConnectionId);
-
-            connections.Remove(UserId, Context.ConnectionId);
+            if (UserId != null)
+                connections.Remove(UserId, Context.ConnectionId);
 
             return base.OnDisconnectedAsync(exception);
         }
