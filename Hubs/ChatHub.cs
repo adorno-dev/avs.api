@@ -7,19 +7,19 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace AVS.API.Hubs
 {
-    // [Authorize]
+    [Authorize]
     public class ChatHub : Hub<IChatClient>
     {
         private readonly static ConnectionMapping<string> connections = new ConnectionMapping<string>();
 
         private readonly TokenService tokenService;
+        
+        public string UserId { get; set; } = string.Empty;
 
         public ChatHub(TokenService tokenService)
         {
             this.tokenService = tokenService;
         }
-
-        public string UserId { get; set; } = string.Empty;
 
         public override Task OnConnectedAsync()
         {
@@ -41,13 +41,9 @@ namespace AVS.API.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        // 
-
         public async Task ReceivedMessage(ChatMessage message)
         {
-            Console.WriteLine(message);
-
-            await Clients.All.ReceivedMessage(message);
+            await Clients.Client(message.SenderId).ReceivedMessage(message);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using AVS.API.Models;
 using AVS.API.Settings;
-using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AVS.API.Services

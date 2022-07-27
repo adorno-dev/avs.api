@@ -22,10 +22,6 @@ namespace AVS.API.Controllers
             this.tokenService = tokenService;
             this.chatService = chatService;
             this.chatHub = chatHub;
-
-            // (this.chatHub as ChatHub).UserId = tokenService.GetUserIdFromRequest(HttpContext);
-
-            
         }
 
         /// <summary>
@@ -76,7 +72,7 @@ namespace AVS.API.Controllers
             else
                 chatService.CreateChatMessage(chatId, message);
 
-            await chatHub.Clients.All.ReceivedMessage(message);
+            await chatHub.Clients.User(toId).ReceivedMessage(message);
 
             await Task.CompletedTask;
 

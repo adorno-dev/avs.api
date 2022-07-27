@@ -20,8 +20,6 @@ builder.Services.AddScoped<ChatRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ChatService>();
 
-builder.Services.AddSignalR();
-
 builder.Services
     .AddCors(o => o.AddPolicy("CorsPolicy", x => { x
         .WithOrigins("http://localhost:3000")
@@ -46,16 +44,19 @@ builder.Services
             ValidateIssuerSigningKey = true,
             ValidateIssuer = false,
             ValidateAudience = false }; 
-        if (x.Events != null)
-            x.Events.OnMessageReceived = context => {
+        x.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context => {
                 var accessToken = context.Request.Query["access_token"];
                 var path = context.Request.Path;
-                if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chatHub"))) {
+                if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chatHub")))
                     context.Token = accessToken;
-                }
                 return Task.CompletedTask;
-            };
+            }
+        };
     });
+
+builder.Services.AddSignalR();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
