@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using AVS.API.Hubs;
 using AVS.API.Repositories;
@@ -54,6 +55,13 @@ builder.Services
                 return Task.CompletedTask;
             }
         };
+        // Development only!!!
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            var handler = new HttpClientHandler();
+            handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+            x.BackchannelHttpHandler = handler;
+        }
     });
 
 builder.Services.AddSignalR();
